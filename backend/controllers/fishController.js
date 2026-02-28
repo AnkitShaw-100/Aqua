@@ -215,7 +215,7 @@ export const getFishById = async (req, res) => {
   try {
     let fish = await Fish.findById(req.params.id).populate(
       "sellerId",
-      "name email phone address"
+      "name email phone address createdAt"
     );
 
     if (!fish) {

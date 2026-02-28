@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
   Anchor, Leaf, Users, Award, ArrowRight, Fish,
-  Heart, Globe, ShieldCheck, Sparkles, Star
+  Heart, Globe, ShieldCheck, Sparkles, Star,
+  Truck, Tag, Brain, UtensilsCrossed
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -17,48 +18,46 @@ const stats = [
 
 const values = [
   {
-    icon: Leaf,
-    title: "Sustainability First",
-    description: "Every fish we source meets strict sustainability standards. We work only with certified fisheries that protect marine ecosystems for future generations.",
+    icon: UtensilsCrossed,
+    title: "Recipe Suggestions",
+    description: "Get AI-powered recipe recommendations for every fish you buy. Discover new dishes, cooking techniques, and curated YouTube video tutorials tailored to your catch.",
     iconBg: "bg-emerald-50",
     iconColor: "text-emerald-500",
     glowColor: "rgba(16,185,129,0.08)",
     borderHover: "hover:border-emerald-200",
   },
   {
-    icon: ShieldCheck,
-    title: "Uncompromising Quality",
-    description: "From the moment it leaves the water to the moment it arrives at your door, every product undergoes rigorous quality and safety checks.",
+    icon: Brain,
+    title: "ML Freshness Detection",
+    description: "Our machine learning model analyzes fish images to provide a real-time freshness score — checking eyes, texture, color, and more to certify quality before you buy.",
     iconBg: "bg-sky-50",
     iconColor: "text-sky-500",
     glowColor: "rgba(14,165,233,0.08)",
     borderHover: "hover:border-sky-200",
   },
   {
-    icon: Heart,
-    title: "Customer Obsessed",
-    description: "Our team is available 7 days a week. We treat every order like it's for family — because fresh seafood deserves personal attention.",
-    iconBg: "bg-rose-50",
-    iconColor: "text-rose-500",
-    glowColor: "rgba(244,63,94,0.08)",
-    borderHover: "hover:border-rose-200",
-  },
-  {
-    icon: Globe,
-    title: "Global Sourcing",
-    description: "We partner with fisheries across Norway, the Gulf of Mexico, the Bay of Bengal, and beyond to bring you the world's finest catches.",
+    icon: Tag,
+    title: "Smart Pricing",
+    description: "Transparent, competitive pricing directly from verified sellers. No middlemen, no hidden fees — just fair prices for premium quality seafood.",
     iconBg: "bg-violet-50",
     iconColor: "text-violet-500",
     glowColor: "rgba(139,92,246,0.08)",
     borderHover: "hover:border-violet-200",
   },
+  {
+    icon: Truck,
+    title: "Fast Delivery",
+    description: "From ocean to doorstep in record time. Our optimized logistics ensure your fresh catch arrives quickly with cold-chain packaging to preserve freshness.",
+    iconBg: "bg-rose-50",
+    iconColor: "text-rose-500",
+    glowColor: "rgba(244,63,94,0.08)",
+    borderHover: "hover:border-rose-200",
+  },
 ];
 
 const team = [
-  { name: "James Calloway", role: "Founder & CEO", avatar: "JC", avatarBg: "bg-sky-500", years: "10 yrs" },
-  { name: "Priya Nair", role: "Head of Sourcing", avatar: "PN", avatarBg: "bg-emerald-500", years: "7 yrs" },
-  { name: "Marco Silva", role: "Executive Chef", avatar: "MS", avatarBg: "bg-amber-500", years: "8 yrs" },
-  { name: "Ayesha Tan", role: "Customer Experience", avatar: "AT", avatarBg: "bg-violet-500", years: "5 yrs" },
+  { name: "Ankit Shaw", role: "Full Stack Developer", avatar: "AS", avatarBg: "bg-sky-500" },
+  { name: "Anushka Maity", role: "Backend Developer", avatar: "AM", avatarBg: "bg-emerald-500" },
 ];
 
 const cardVariants = {
@@ -164,18 +163,18 @@ const About = () => {
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-5 border"
               style={{ background: "rgba(14,165,233,0.07)", borderColor: "rgba(14,165,233,0.2)", color: "#0284c7", fontFamily: "'Sora', 'Nunito', sans-serif" }}>
               <Anchor className="w-3.5 h-3.5" />
-              What We Stand For
+              What Makes Us Different
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 tracking-tight mb-4"
               style={{ fontFamily: "'Sora', 'Nunito', sans-serif" }}>
               Our{" "}
               <span className="relative inline-block text-sky-500">
-                Core Values
+                Core Ideas
                 <span className="absolute -bottom-1 left-0 w-full h-[3px] rounded-full bg-sky-400" />
               </span>
             </h2>
             <p className="text-slate-500 max-w-md mx-auto leading-relaxed font-light">
-              Everything we do is guided by four principles that have shaped us from day one.
+              Powered by AI and built for freshness — here's what drives AquaDelight.
             </p>
           </motion.div>
 
@@ -223,11 +222,11 @@ const About = () => {
               </span>
             </h2>
             <p className="text-slate-500 max-w-md mx-auto leading-relaxed font-light">
-              Passionate seafood lovers, sustainability advocates, and culinary experts — all working toward one goal.
+              The developers behind AquaDelight — building the future of fresh seafood delivery.
             </p>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid sm:grid-cols-2 gap-6 max-w-lg mx-auto">
             {team.map((member, i) => (
               <motion.div key={member.name} custom={i} variants={cardVariants} initial="hidden"
                 whileInView="visible" viewport={{ once: true }}
@@ -240,11 +239,7 @@ const About = () => {
                 <h3 className="text-sm font-bold text-slate-800 mb-1" style={{ fontFamily: "'Sora', 'Nunito', sans-serif" }}>
                   {member.name}
                 </h3>
-                <p className="text-xs text-slate-400 font-medium mb-4">{member.role}</p>
-                <div className="mt-auto pt-4 border-t border-slate-100 w-full flex items-center justify-between">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Experience</span>
-                  <span className="text-xs font-bold text-sky-500">{member.years}</span>
-                </div>
+                <p className="text-xs text-slate-400 font-medium">{member.role}</p>
               </motion.div>
             ))}
           </div>

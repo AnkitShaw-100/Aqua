@@ -83,7 +83,7 @@ const Footer = () => {
               Ready to taste the ocean?
             </p>
             <p className="text-sm text-slate-300 font-light mt-0.5">
-              Free delivery on your first order over $49.
+              Free delivery on your first order over ₹999.
             </p>
           </div>
           <Link

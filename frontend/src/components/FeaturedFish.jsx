@@ -47,12 +47,11 @@ const FeaturedFish = () => {
             label: "Fresh Catch",
             color: "bg-cyan-50 text-cyan-600 border-cyan-100",
           },
-          tags: [item.freshness, item.category, `${item.quantity}${item.unit}`],
+          tags: [item.category, `${item.quantity} units`],
           gradient: "from-sky-50 to-blue-50",
           accent: "#0ea5e9",
           sellerId: item.sellerId,
           quantity: item.quantity,
-          unit: item.unit,
         }));
 
         setFish(featuredFish);
@@ -246,8 +245,8 @@ const FeaturedFish = () => {
                           className="text-lg font-bold text-slate-900"
                           style={{ fontFamily: "'Sora', 'Nunito', sans-serif" }}
                         >
-                          ${item.price}
-                          <span className="text-xs text-slate-400 font-normal">/{item.unit}</span>
+                          ₹{item.price}
+                          <span className="text-xs text-slate-400 font-normal">/kg</span>
                         </p>
                       </div>
 

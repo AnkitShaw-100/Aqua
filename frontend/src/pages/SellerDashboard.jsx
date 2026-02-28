@@ -96,7 +96,7 @@ const SellerDashboard = () => {
       } else {
         setError("Failed to delete product");
       }
-    } catch (err) {
+    } catch (error) {
       setError("Failed to delete product");
     }
   };

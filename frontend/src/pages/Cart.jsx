@@ -136,10 +136,10 @@ const Cart = () => {
                           </div>
                           <div className="text-right">
                             <p className="text-sm font-bold text-slate-900">
-                              ${item.fish.price.toFixed(2)}
+                              ₹{item.fish.price.toFixed(2)}
                             </p>
                             <p className="text-xs text-slate-400">
-                              /{item.fish.unit}
+                              /kg
                             </p>
                           </div>
                         </div>
@@ -179,7 +179,7 @@ const Cart = () => {
                               Subtotal
                             </p>
                             <p className="text-lg font-bold text-sky-600">
-                              $
+                              ₹
                               {(
                                 item.fish.price *
                                 item.quantity
@@ -237,7 +237,7 @@ const Cart = () => {
                     <span className="text-sm text-slate-600">Subtotal</span>
                   </div>
                   <span className="font-semibold text-slate-900">
-                    ${subtotal.toFixed(2)}
+                    ₹{subtotal.toFixed(2)}
                   </span>
                 </div>
 
@@ -248,7 +248,7 @@ const Cart = () => {
                     <span className="text-sm text-slate-600">Tax (10%)</span>
                   </div>
                   <span className="font-semibold text-slate-900">
-                    ${tax.toFixed(2)}
+                    ₹{tax.toFixed(2)}
                   </span>
                 </div>
 
@@ -259,7 +259,7 @@ const Cart = () => {
                     <span className="text-sm text-slate-600">Delivery Fee</span>
                   </div>
                   <span className="font-semibold text-slate-900">
-                    ${deliveryFee.toFixed(2)}
+                    ₹{deliveryFee.toFixed(2)}
                   </span>
                 </div>
 
@@ -270,7 +270,7 @@ const Cart = () => {
                 <div className="flex items-center justify-between bg-sky-50 -mx-6 -mb-6 px-6 py-4 border-t border-slate-200">
                   <span className="font-bold text-slate-900">Total Amount</span>
                   <span className="text-2xl font-bold text-sky-600">
-                    ${total.toFixed(2)}
+                    ₹{total.toFixed(2)}
                   </span>
                 </div>
               </div>

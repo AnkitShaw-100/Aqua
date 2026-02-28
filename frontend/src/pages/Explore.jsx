@@ -65,12 +65,11 @@ const Explore = () => {
             label: "Fresh Catch",
             color: "bg-cyan-50 text-cyan-600 border-cyan-100",
           },
-          tags: [item.freshness, item.category, `${item.quantity}${item.unit}`],
+          tags: [item.category, `${item.quantity} units`],
           gradient: "from-sky-50 to-blue-50",
           accent: "#0ea5e9",
           description: item.description,
           quantity: item.quantity,
-          unit: item.unit,
           category: item.category,
           sellerId: item.sellerId,
           mlAnalysis: item.mlAnalysis,
@@ -286,8 +285,8 @@ return (
                           Price
                         </p>
                         <p className="text-lg font-bold text-slate-900">
-                          ${fish.price}
-                          <span className="text-xs text-slate-400 font-normal">/{fish.unit}</span>
+                          ₹{fish.price}
+                          <span className="text-xs text-slate-400 font-normal">/kg</span>
                         </p>
                       </div>
 
