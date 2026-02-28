@@ -281,7 +281,7 @@ return (
                       ))}
                       {fish.mlAnalysis && fish.mlAnalysis.isCertified && (
                         <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-green-50 text-green-700 border border-green-200 whitespace-nowrap flex items-center gap-1">
-                          ✅ AI Certified
+                          AI Certified
                         </span>
                       )}
                     </div>
