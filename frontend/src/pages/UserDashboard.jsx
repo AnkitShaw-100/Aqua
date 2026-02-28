@@ -20,6 +20,7 @@ import {
   ChevronUp,
   AlertCircle,
   Fish,
+  ArrowLeft,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -157,31 +158,34 @@ const UserDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-sky-50/50 to-slate-50 pt-16 pb-16">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8"
-        >
-          <div>
-            <div className="flex items-center gap-3 mb-1">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 mt-2">
-                <User className="h-5 w-5 text-sky-600" />
-              </div>
-              <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-                My Account
-              </h1>
-            </div>
-            <p className="text-muted-foreground ml-[52px]">
+    <div className="min-h-screen bg-slate-50">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12">
+        {/* Back + Heading */}
+        <div className="mb-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate(-1)}
+            className="gap-1.5 text-slate-500 hover:text-sky-600 hover:bg-sky-50 -ml-2 mb-3"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </Button>
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <h1 className="text-3xl font-bold text-slate-900">
+              My Account
+            </h1>
+            <p className="text-slate-500 text-sm mt-1">
               Welcome back, {user?.name}
             </p>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 mb-8 bg-white/60 backdrop-blur-sm border border-slate-200 rounded-xl p-1 w-fit">
+        <div className="flex gap-1 mb-4 bg-white/60 backdrop-blur-sm border border-slate-200 rounded-xl p-1 w-fit">
           {tabs.map((tab) => (
             <button
               key={tab.id}

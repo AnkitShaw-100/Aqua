@@ -14,11 +14,10 @@ import {
   Loader2,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
-;
+
 const API_URL = import.meta.env.VITE_API_URL || "https://aqua-delight-backend.vercel.app/api";
 
 const Checkout = () => {
@@ -83,7 +82,8 @@ const Checkout = () => {
     fetchUserProfile();
   }, [token]);
 
-  const [paymentMethod, setPaymentMethod] = useState("card");
+  const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
+  const [orderError, setOrderError] = useState("");
   const [cardDetails, setCardDetails] = useState({
     cardNumber: "",
     cardName: "",
@@ -144,7 +144,7 @@ const Checkout = () => {
   };
 
   const validatePayment = () => {
-    if (paymentMethod === "card") {
+    if (paymentMethod === "Credit Card" || paymentMethod === "Debit Card") {
       return (
         cardDetails.cardNumber.replace(/\s/g, "").length === 16 &&
         cardDetails.cardName.trim() &&
@@ -152,7 +152,7 @@ const Checkout = () => {
         cardDetails.cvv.length === 3
       );
     }
-    return true; // Other payment methods don't need validation
+    return true;
   };
 
   const handleProceedToPayment = () => {
@@ -170,27 +170,87 @@ const Checkout = () => {
     }
 
     setLoading(true);
-    // Simulate API call for payment processing
-    setTimeout(() => {
-      const newOrderId = `ORD-${Date.now()}-${Math.random()
-        .toString(36)
-        .substr(2, 9)
-        .toUpperCase()}`;
-      setOrderId(newOrderId);
+    setOrderError("");
+
+    try {
+      // Clear backend cart
+      await fetch(`${API_URL}/cart`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Sync frontend cart items to backend
+      for (const item of items) {
+        const fishId = item.fish.id || item.fish._id;
+        const res = await fetch(`${API_URL}/cart`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ fishId, quantity: item.quantity }),
+        });
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.message || `Failed to sync cart item: ${item.fish.name}`);
+        }
+      }
+
+      // Create order from backend cart
+      const orderRes = await fetch(`${API_URL}/order`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          deliveryAddress: {
+            street: deliveryDetails.street,
+            city: deliveryDetails.city,
+            state: deliveryDetails.state,
+            zipCode: deliveryDetails.zipCode,
+            country: deliveryDetails.country,
+          },
+          phoneNumber: deliveryDetails.phone,
+          paymentMethod,
+        }),
+      });
+
+      const orderData = await orderRes.json();
+
+      if (!orderRes.ok) {
+        throw new Error(orderData.message || "Failed to create order");
+      }
+
+      setOrderId(orderData.order?.orderId || orderData.orderId);
       setStep("confirmation");
+      clearCart();
+    } catch (err) {
+      console.error("Order creation failed:", err);
+      setOrderError(err.message || "Something went wrong. Please try again.");
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
 
   const handleCompleteOrder = () => {
-    clearCart();
-    navigate("/");
+    navigate("/user/dashboard");
   };
 
-  if (items.length === 0) {
+  if (items.length === 0 && step !== "confirmation") {
     return (
       <div className="min-h-screen bg-white flex flex-col">
-        <Navbar />
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-6">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate(-1)}
+            className="gap-1.5 text-slate-500 hover:text-sky-600 hover:bg-sky-50 -ml-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </Button>
+        </div>
         <div className="flex-1 flex items-center justify-center px-4 py-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -215,7 +275,6 @@ const Checkout = () => {
             </button>
           </motion.div>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -223,7 +282,17 @@ const Checkout = () => {
   if (!token || !user) {
     return (
       <div className="min-h-screen bg-white flex flex-col">
-        <Navbar />
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-6">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate(-1)}
+            className="gap-1.5 text-slate-500 hover:text-sky-600 hover:bg-sky-50 -ml-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </Button>
+        </div>
         <div className="flex-1 flex items-center justify-center px-4 py-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -248,31 +317,36 @@ const Checkout = () => {
             </button>
           </motion.div>
         </div>
-        <Footer />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Navbar />
-
-      {/* Header */}
-      <div className="relative bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <button
-            onClick={() => navigate("/cart")}
-            className="flex items-center gap-2 text-sky-600 hover:text-sky-700 font-medium mb-4 transition"
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12">
+        {/* Back + Heading */}
+        <div className="mb-8">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate(-1)}
+            className="gap-1.5 text-slate-500 hover:text-sky-600 hover:bg-sky-50 -ml-2 mb-3"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Cart
-          </button>
-          <h1 className="text-4xl font-bold text-slate-900">Checkout</h1>
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </Button>
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <h1 className="text-3xl font-bold text-slate-900">
+              Checkout
+            </h1>
+          </motion.div>
         </div>
-      </div>
 
       {/* Progress Steps */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div>
         <div className="flex items-center justify-between mb-12 max-w-2xl">
           {[
             { id: "details", label: "Delivery Details" },
@@ -333,7 +407,7 @@ const Checkout = () => {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+      <div>
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Form Section */}
           <div className="lg:col-span-2">
@@ -469,8 +543,10 @@ const Checkout = () => {
 
                   <div className="space-y-4 mb-8">
                     {[
-                      { id: "card", label: "Credit/Debit Card", icon: CreditCard },
-                      { id: "wallet", label: "Digital Wallet", icon: Wallet },
+                      { id: "Credit Card", label: "Credit Card", icon: CreditCard },
+                      { id: "Debit Card", label: "Debit Card", icon: CreditCard },
+                      { id: "UPI", label: "UPI", icon: Wallet },
+                      { id: "Cash on Delivery", label: "Cash on Delivery", icon: Wallet },
                     ].map(({ id, label, icon: Icon }) => (
                       <label
                         key={id}
@@ -497,7 +573,7 @@ const Checkout = () => {
                   </div>
 
                   {/* Card Form */}
-                  {paymentMethod === "card" && (
+                  {(paymentMethod === "Credit Card" || paymentMethod === "Debit Card") && (
                     <div className="space-y-4 mb-8">
                       <input
                         type="text"
@@ -544,6 +620,13 @@ const Checkout = () => {
                       payment information is encrypted and secure.
                     </p>
                   </div>
+
+                  {orderError && (
+                    <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-8 flex items-start gap-3">
+                      <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                      <p className="text-sm text-red-700">{orderError}</p>
+                    </div>
+                  )}
 
                   <div className="flex gap-4">
                     <button
@@ -635,7 +718,7 @@ const Checkout = () => {
                     onClick={handleCompleteOrder}
                     className="w-full py-3.5 px-4 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
                   >
-                    Back to Home
+                    View My Orders
                   </button>
                 </motion.div>
               )}
@@ -702,8 +785,7 @@ const Checkout = () => {
           </motion.div>
         </div>
       </div>
-
-      <Footer />
+      </div>
     </div>
   );
 };

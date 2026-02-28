@@ -5,13 +5,13 @@ import {
   Minus,
   ShoppingCart,
   ArrowRight,
+  ArrowLeft,
   Leaf,
   Truck,
   AlertCircle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 
@@ -32,7 +32,17 @@ const Cart = () => {
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-white flex flex-col">
-        <Navbar />
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-6">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate(-1)}
+            className="gap-1.5 text-slate-500 hover:text-sky-600 hover:bg-sky-50 -ml-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </Button>
+        </div>
         <div className="flex-1 flex items-center justify-center px-4 py-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -57,35 +67,39 @@ const Cart = () => {
             </button>
           </motion.div>
         </div>
-        <Footer />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Navbar />
-
-      {/* Header */}
-      <div className="relative bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12">
+        {/* Back + Heading */}
+        <div className="mb-8">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate(-1)}
+            className="gap-1.5 text-slate-500 hover:text-sky-600 hover:bg-sky-50 -ml-2 mb-3"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </Button>
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <h1 className="text-4xl font-bold text-slate-900 mb-2">
+            <h1 className="text-3xl font-bold text-slate-900">
               Shopping Cart
             </h1>
-            <p className="text-slate-500">
+            <p className="text-slate-500 text-sm mt-1">
               You have{" "}
               <span className="font-semibold text-slate-700">{items.length}</span> item
               {items.length !== 1 ? "s" : ""} in your cart
             </p>
           </motion.div>
         </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2">
@@ -320,24 +334,10 @@ const Cart = () => {
               </div>
             </div>
 
-            {/* Info Box */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-4"
-            >
-              <p className="text-xs text-blue-700 leading-relaxed">
-                <span className="font-semibold">💳 Secure Checkout:</span> All
-                transactions are encrypted and secure. Your payment information
-                is never stored on our servers.
-              </p>
-            </motion.div>
+
           </motion.div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 };
